@@ -38,7 +38,21 @@ class Matrix {
 
   /** Multiply this matrix by the provided matrix and return the result. */
   Matrix mult(Matrix other) {
-    throw new UnsupportedOperationException();
+    if (other.height() != this.width()) {
+      throw new IllegalArgumentException("Dimension mismatch");
+    } else {
+      double[][] newElements = new double[this.height()][other.width()];
+      for (int i = 0; i < this.height(); ++i) {
+        for (int j = 0; j < other.width(); ++j) {
+          double val = 0;
+          for (int k = 0; k < this.width(); ++k) {
+            val += this.get(i,k) * other.get(k,j);
+          }
+          newElements[i][j] = val;
+        }
+      }
+      return new Matrix(newElements);
+    }
   }
 
   /** Add this matrix to the provided matrix and return the result. */
@@ -57,7 +71,13 @@ class Matrix {
 
   /** Transpose this matrix and return the result. */
   Matrix transpose() {
-    throw new UnsupportedOperationException();
+    Matrix newMatrix = new Matrix(this.width(), this.height());
+    for (int i = 0; i < this.height(); ++i) {
+      for (int j = 0; j < this.width(); ++j) {
+        newMatrix.elements[j][i] = elements[i][j];
+      }
+    }
+    return newMatrix;
   }
 
   /**
@@ -68,7 +88,11 @@ class Matrix {
    * @return the value of the element
    */
   double get(int row, int col) {
-    return elements[row][col];
+    if (col < width && col >= 0 && height > row && row >= 0) {
+      return elements[row][col];
+    } else {
+      throw new IndexOutOfBoundsException();
+    }
   }
 
   int width() {
